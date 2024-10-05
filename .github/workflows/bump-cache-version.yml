@@ -27,12 +27,12 @@ jobs:
           git checkout -b $branch_name
           echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
     
-      - name: Install dependencies
-        run: npm install
-
       - name: Update package.json
         run: |
           sed -i 's/"@actions\/cache": "npm:@useblacksmith\/cache@[^"]*"/"@actions\/cache": "npm:@useblacksmith\/cache@${{ github.event.inputs.cache_version }}"/' package.json
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Build
         run: npm run build
