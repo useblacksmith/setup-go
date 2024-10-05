@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Create new branch
+        id: create-branch
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
@@ -22,7 +23,9 @@ jobs:
           git checkout main
           git pull origin main
           timestamp=$(date +%Y%m%d%H%M%S)
-          git checkout -b bump-cache-version-${{ github.event.inputs.cache_version }}-$timestamp
+          branch_name="bump-cache-version-${{ github.event.inputs.cache_version }}-$timestamp"
+          git checkout -b $branch_name
+          echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
     
       - name: Install dependencies
         run: npm install
@@ -46,5 +49,5 @@ jobs:
         run: |
           git add .
           git commit -m "Bump @actions/cache version to ${{ github.event.inputs.cache_version }}"
-          git push origin bump-cache-version-${{ github.event.inputs.cache_version }}-$timestamp
+          git push origin ${{ steps.create-branch.outputs.branch_name }}
           gh pr create --title "Bump @actions/cache version to ${{ github.event.inputs.cache_version }}" --body "This PR updates the @actions/cache version to ${{ github.event.inputs.cache_version }}"
