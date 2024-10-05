@@ -28,9 +28,6 @@ jobs:
         run: |
           sed -i 's/"@actions\/cache": "npm:@useblacksmith\/cache@[^"]*"/"@actions\/cache": "npm:@useblacksmith\/cache@${{ github.event.inputs.cache_version }}"/' package.json
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Build
         run: npm run build
 
